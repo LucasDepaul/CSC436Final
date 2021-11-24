@@ -14,10 +14,10 @@ router.get('/todos/:id', async function(req, res, next) {
 });
 router.get('/getname/:id', async function(req, res, next) {
     const user = await User.findById(req.params.id).exec()
-    return res.status(200).json(user)
+    return res.status(200).json(user.username)
 });
 router.get('/getUser/:id', async function(req, res, next) {
 	const user = await User.find().where('username').equals(req.params.id).exec()
-    return res.status(200).send(user)
+    return res.status(200).send(user.id)
 });
 module.exports = router;

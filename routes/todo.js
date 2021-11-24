@@ -38,6 +38,8 @@ router.put('/toggle/:id/:completed', async function(req,res,next){
 	}}).catch(function () {
      console.log("Promise Rejected");
 });
+	todo.save();
+	console.log(todo.completed)
 	return res.status(200).send("Todo complete was togled")
 }
 	else 
@@ -72,10 +74,10 @@ router.get('/', async function(req, res, next) {
 
 router.post('/', async function(req, res) {
 	console.log("id: " + req.payload.id)
-	var user = await User.findById(req.payload.id).exec()
+	var user = await User.findById(req.body.author).exec()
 	const todo = new Todo({
 		"name": req.body.name ,
-		"author": req.payload.id ,
+		"author": req.body.author ,
 		"dateCreated": req.body.dateCreated ,
 		"description": req.body.description ,
 		"completed": req.body.completed ,
