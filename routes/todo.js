@@ -46,10 +46,19 @@ router.put('/toggle/:id/:completed', async function(req,res,next){
 
 router.delete('/delete/:id', async function(req,res,next){
 	const todo = await Todo.findById(req.params.id).exec();
+	var user = await User.findById(req.body.author).exec();
+	console.log("Author: " + req.body.author);
+	console.log(user.todos)
+	var todos = user.todos;
 	if (todo.author.equals(req.body.author)){
-	await Todo.findById(req.params.id).remove().exec();
-	//Todo.delete(todo);
-	return res.status(200).send("Todo: " + req.params.id + " was deleted ")
+		//if (await user.update({},{$pull:{todos: {$in: [todo]}}}).remove().exec())
+			
+		if(await todos.pop())
+			console.log("success");
+		await user.save();
+		//await user.todos.findById(req.body.author).remove().exec();
+		await Todo.findById(req.params.id).remove().exec();
+		return res.status(200).send("Todo: " + req.params.id + " was deleted ")
 	}
 	else 
 		return res.status(401).send("Unauthorized")
@@ -62,6 +71,7 @@ router.get('/', async function(req, res, next) {
 });
 
 router.post('/', async function(req, res) {
+	console.log("id: " + req.payload.id)
 	var user = await User.findById(req.payload.id).exec()
 	const todo = new Todo({
 		"name": req.body.name ,
